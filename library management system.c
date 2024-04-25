@@ -268,7 +268,7 @@ if(p==1)
 printf("\nTHIS BOOK CANNOT DELETED BECAUSE IT'S ISSUED BY A PERSON");
 if(c>=0&&p==0)
 {
-fp=fopen("bca_lib.txt","rb");
+fp=fopen("bbm_lib.txt","rb");
 ftemp=fopen("temp1.txt","wb");
 while(fread(&s,sizeof(s),1,fp)==1)
 {
