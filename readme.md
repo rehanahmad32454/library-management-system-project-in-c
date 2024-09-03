@@ -35,5 +35,11 @@ Change Password: The user (librarian or student) can manage and update their pas
 **Multiple Librarians**
 
 Extend the system to allow multiple librarians with different access levels.
-Student Records: Integrate student records to track individual student history with the library.
-Enhanced UI: Improve the user interface for better user experience.
+
+**Student Records**
+
+Integrate student records to track individual student history with the library.
+
+**Enhanced UI**
+
+Improve the user interface for better user experience.
