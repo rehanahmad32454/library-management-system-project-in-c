@@ -1,4 +1,4 @@
-Library Management System
+#Library Management System
 This project is a simple Library Management System implemented in C language using file handling. It is designed to manage books in a library across two departments: BCA (Bachelor of Computer Applications) and BBM (Bachelor of Business Management). The system includes functionalities for librarian authentication, book management, and student book transactions.
 
 Features
