@@ -27,53 +27,41 @@ char uss[30];
 char pss[30];
 char r[50];
 }p;
-long int si=sizeof(s);
-long int si1=sizeof(s1);
-long int si2=sizeof(p);
-void iss1();
-void iss2();
-void iss3();
-void lib1();
-void lib2();
-void lib3();
 void dep();
-void in_book();
-void dis_book();
-void del_book();
-void upd_book();
-void issue_book();
-void search_book();
-void sort_book();
-void in_book1();
-void dis_book1();
-void del_book1();
-void upd_book1();
-void search_book1();
-void sort_book1();
-void dis_st();
-void ret_book();
-void search_st();
-void upd_st();
-void sort_st();
-void issue_book1();
-void ret_book1();
-void dis_st1();
-void upd_st1();
-void search_st1();
-void sort_st1();
-void login();
-void chapass();
-void forget();
-void security();
 void intro();
+void login();
+void forget();
+void bca_lib();
+void bbm_lib();
+void chapass();
+void bbm_stud();
+void lib_menu();
+void bca_stud();
+void security();
 void book_dep();
-void issue_dep();
-void dep();
-FILE *fp,*ftemp,*fp1;
+void stud_menu();
+void lib_opt_ch();
+void stud_opt_ch();
+void in_book(char lib_file[]);
+void dis_book(char lib_file[]);
+void del_book(char lib_file[]);
+void upd_book(char lib_file[]);
+void sort_book(char lib_file[]);
+void dis_stud(char stud_file[]);
+void sort_stud(char stud_file[]);
+void search_book(char lib_file[]);
+void search_stud(char stud_file[]);
+void upd_stud(char lib_file[],char stud_file[]);
+void ret_book(char lib_file[],char stud_file[]);
+void issue_book(char lib_file[],char stud_file[]);
 int m;
-void in_book()
+FILE *fp,*ftemp,*fp1;
+long int si=sizeof(s);
+long int si2=sizeof(p);
+long int si1=sizeof(s1);
+void in_book(char lib_file[])
 {
-fp=fopen("bca_lib.txt","ab");
+fp=fopen(lib_file,"ab");
 printf("\nENTER BOOK NAME=");
 scanf("%s",s.book);
 printf("\nENTER STOCK=");
@@ -83,24 +71,24 @@ scanf("%s",s.auth);
 fwrite(&s,sizeof(s),1,fp);
 fclose(fp);
 }
-void dis_book()
+void dis_book(char lib_file[])
 {
-fp=fopen("bca_lib.txt","rb");
+fp=fopen(lib_file,"rb");
 printf(" _____________________________________________________");
 printf("\n|   BOOK NAME\t\tSTOCK\t\tAUTHOR NAME   |");
 printf("\n|_____________________________________________________|");
 while(fread(&s,sizeof(s),1,fp)==1)
 {
-printf("\n|   %s\t\t\t%d\t\t%s\t      |",s.book,s.stock,s.auth);
+printf("\n|   %s\t\t%d\t\t%s\t      |",s.book,s.stock,s.auth);
 }
 printf("\n|_____________________________________________________|");
 fclose(fp);
 }
-void del_book()
+void del_book(char lib_file[])
 {
 char book[30];
 int p=0,c=0,p1=0;
-fp1=fopen("bca_stdu.txt","rb");
+fp1=fopen(lib_file,"rb");
 printf("\nENTER BOOK NAME FOR DELETING=");
 scanf("%s",book);
 while(fread(&s1,sizeof(s1),1,fp1)==1)
@@ -116,7 +104,7 @@ if(p==1)
 printf("\nTHIS BOOK CANNOT DELETED BECAUSE IT'S ISSUED BY A PERSON");
 if(c>=0&&p==0)
 {
-fp=fopen("bca_lib.txt","rb");
+fp=fopen(lib_file,"rb");
 ftemp=fopen("temp1.txt","wb");
 while(fread(&s,sizeof(s),1,fp)==1)
 {
@@ -127,8 +115,8 @@ p1=1;
 }
 fclose(fp);
 fclose(ftemp);
-remove("bca_lib.txt");
-rename("temp1.txt","bca_lib.txt");
+remove(lib_file);
+rename("temp1.txt",lib_file);
 if(p1==0)
 printf("\nBOOK NOT FOUND");
 else
@@ -136,13 +124,13 @@ printf("\nBOOK RECORD DELETED SUCCESSFULLY");
 }
 fclose(fp1);
 }
-void upd_book()
+void upd_book(char lib_file[])
 {
 char bk1[30];
 int f=0;
 printf("\nENTER BOOK NAME FOR UPDATE=");
 scanf("%s",bk1);
-fp=fopen("bca_lib.txt","rb+");
+fp=fopen(lib_file,"rb+");
 while(fread(&s,sizeof(s),1,fp)==1)
 {
 if(strcmpi(s.book,bk1)==0)
@@ -165,11 +153,11 @@ else
 printf("\nBOOK RECORD UPDATED SUCCESSFULLY");
 fclose(fp);
 }
-void search_book()
+void search_book(char lib_file[])
 {
 char bk[30];
 int p=0,m=0;
-fp=fopen("bca_lib.txt","rb");
+fp=fopen(lib_file,"rb");
 printf("\nENTER BOOK NAME FOR SEARCHING=");
 scanf("%s",bk);
 while(fread(&s,sizeof(s),1,fp)==1)
@@ -183,7 +171,7 @@ printf("\n|   BOOK NAME\t\tSTOCK\t\tAUTHOR NAME   |");
 printf("\n|_____________________________________________________|");
 m++;
 }
-printf("\n|   %s\t\t\t%d\t\t%s\t      |",s.book,s.stock,s.auth);
+printf("\n|   %s\t\t%d\t\t%s\t      |",s.book,s.stock,s.auth);
 p=1;
 }
 }
@@ -196,11 +184,11 @@ printf("\n\nRECORD SERACHED SUCCESSFULLY");
 }
 fclose(fp);
 }
-void sort_book()
+void sort_book(char lib_file[])
 {
 struct lib temp,st[50];
 int i,j,n=0;
-fp=fopen("bca_lib.txt","rb");
+fp=fopen(lib_file,"rb");
 while(fread(&s,sizeof(s),1,fp)==1)
 st[n++]=s;
 for(i=0;i<n-1;i++)
@@ -219,168 +207,18 @@ printf(" _____________________________________________________");
 printf("\n|   BOOK NAME\t\tSTOCK\t\tAUTHOR NAME   |");
 printf("\n|_____________________________________________________|");
 for(i=0;i<n;i++)
-printf("\n|   %s\t\t\t%d\t\t%s\t      |",st[i].book,st[i].stock,st[i].auth);
+printf("\n|   %s\t\t%d\t\t%s\t      |",st[i].book,st[i].stock,st[i].auth);
 printf("\n|_____________________________________________________|");
 fclose(fp);
 }
-void in_book1()
+void issue_book(char lib_file[],char stud_file[])
 {
-fp=fopen("bbm_lib.txt","ab");
-printf("\nENTER BOOK NAME=");
-scanf("%s",s.book);
-printf("\nENTER STOCK=");
-scanf("%d",&s.stock);
-printf("\nENTER AUTHOR NAME=");
-scanf("%s",s.auth);
-fwrite(&s,sizeof(s),1,fp);
-fclose(fp);
-}
-void dis_book1()
-{
-fp=fopen("bbm_lib.txt","rb");
-printf(" _____________________________________________________");
-printf("\n|   BOOK NAME\t\tSTOCK\t\tAUTHOR NAME   |");
-printf("\n|_____________________________________________________|");
-while(fread(&s,sizeof(s),1,fp)==1)
-{
-printf("\n|   %s\t\t\t%d\t\t%s\t      |",s.book,s.stock,s.auth);
-}
-printf("\n|_____________________________________________________|");
-fclose(fp);
-}
-void del_book1()
-{
-char book[30];
-int p=0,c=0,p1=0;
-fp1=fopen("bbm_stdu.txt","rb");
-printf("\nENTER BOOK NAME FOR DELETING=");
-scanf("%s",book);
-while(fread(&s1,sizeof(s1),1,fp1)==1)
-{
-c++;
-if(strcmpi(book,s1.bk)==0)
-{
-p=1;
-break;
-}
-}
-if(p==1)
-printf("\nTHIS BOOK CANNOT DELETED BECAUSE IT'S ISSUED BY A PERSON");
-if(c>=0&&p==0)
-{
-fp=fopen("bbm_lib.txt","rb");
-ftemp=fopen("temp1.txt","wb");
-while(fread(&s,sizeof(s),1,fp)==1)
-{
-if(strcmpi(book,s.book)!=0)
-fwrite(&s,sizeof(s),1,ftemp);
-else
-p1=1;
-}
-fclose(fp);
-fclose(ftemp);
-remove("bbm_lib.txt");
-rename("temp1.txt","bbm_lib.txt");
-if(p1==0)
-printf("\nBOOK NOT FOUND");
-else
-printf("\nBOOK RECORD DELETED SUCCESSFULLY");
-}
-fclose(fp1);
-}
-void upd_book1()
-{
-char bk1[30];
-int f=0;
-printf("\nENTER BOOK NAME FOR UPDATE=");
-scanf("%s",bk1);
-fp=fopen("bbm_lib.txt","rb+");
-while(fread(&s,sizeof(s),1,fp)==1)
-{
-if(strcmpi(s.book,bk1)==0)
-{
-printf("\nENTER BOOK NAME=");
-scanf("%s",s.book);
-printf("\nENTER STOCK=");
-scanf("%d",&s.stock);
-printf("\nENTER AUTHOR NAME=");
-scanf("%s",s.auth);
-fseek(fp,-si,1);
-fwrite(&s,sizeof(s),1,fp);
-f=1;
-break;
-}
-}
-if(f==0)
-printf("\nBOOK NOT FOUND");
-else
-printf("\nBOOK REORD UPDATED SUCCESSFULLY");
-fclose(fp);
-}
-void search_book1()
-{
-char bk[30];
-int p=0,m=0;
-fp=fopen("bbm_lib.txt","rb");
-printf("\nENTER BOOK NAME FOR SEARCHING=");
-scanf("%s",bk);
-while(fread(&s,sizeof(s),1,fp)==1)
-{
-if(strcmpi(bk,s.book)==0)
-{
-if(m==0)
-{
-printf(" _____________________________________________________");
-printf("\n|   BOOK NAME\t\tSTOCK\t\tAUTHOR NAME   |");
-printf("\n|_____________________________________________________|");
-m++;
-}
-printf("\n|   %s\t\t\t%d\t\t%s\t      |",s.book,s.stock,s.auth);
-p=1;
-}
-}
-if(p==0)
-printf("\nBOOK NOT FOUND");
-else
-{
-printf("\n|_____________________________________________________|");
-printf("\n\nRECORD SERACHED SUCCESSFULLY");
-}
-fclose(fp);
-}
-void sort_book1()
-{
-struct lib temp,st[50];
-int i,j,n=0;
-fp=fopen("bbm_lib.txt","rb");
-while(fread(&s,sizeof(s),1,fp)==1)
-st[n++]=s;
-for(i=0;i<n-1;i++)
-{
-for(j=i+1;j<n;j++)
-{
-if(strcmpi(st[i].book,st[j].book)>0)
-{
-temp=st[i];
-st[i]=st[j];
-st[j]=temp;
-}
-}
-}
-printf(" _____________________________________________________");
-printf("\n|   BOOK NAME\t\tSTOCK\t\tAUTHOR NAME   |");
-printf("\n|_____________________________________________________|");
-for(i=0;i<n;i++)
-printf("\n|   %s\t\t\t%d\t\t%s\t      |",st[i].book,st[i].stock,st[i].auth);
-printf("\n|_____________________________________________________|");
-fclose(fp);
-}
-void issue_book()
-{
-char bk[30],dep[5]={"BCA"},cl[4][40]={"BCA-I","BCA-II","BCA-III","BCA-IV"};
-int p=0,op,i;
-fp=fopen("bca_lib.txt","rb+");
-fp1=fopen("bca_stdu.txt","ab");
+char bk[30],dep[5]={"BCA"};
+char bca_cl[4][40]={"BCA-I","BCA-II","BCA-III"};
+char bbm_cl[4][40]={"BBM-I","BBM-II","BBM-III"};
+int p=0,opt,i;
+fp=fopen(lib_file,"rb+");
+fp1=fopen(stud_file,"ab");
 printf("\nENTER BOOK NAME=");
 scanf("%s",bk);
 while(fread(&s,sizeof(s),1,fp)==1)
@@ -398,26 +236,26 @@ else
 p=0;
 printf("\nENTER YOUR NAME=");
 scanf("%s",s1.na);
-h:
-printf("\nCHOOSE YOUR CLASS\n");
-printf("\n1-BCA-I\t\t2-BCA-II\t3-BCA-III\t4-BCA-IV\n");
-printf("\nENTER OPTION(1-4)=");
-scanf("%d",&op);
-op=op-1;
-for(i=0;i<sizeof(cl);i++)
+printf("CHOOSE CLASS:");
+if(strcmpi(lib_file,"bca_lib.txt")==0)
+printf("\n1-BCA-I\t\t2-BCA-II\t3-BCA-III\n");
+else
+printf("\n1-BBM-I\t\t2-BBM-II\t3-BBM-III");
+printf("\nENTER OPTION(1-3)=");
+scanf("%d",&opt);
+while(!(opt>0&&opt<4))
 {
-if(op==0||op==1||op==2||op==3)
-{
-strcpy(s1.cl,cl[op]);
-p=1;
-break;
+if(strcmpi(lib_file,"bca_lib.txt")==0)
+printf("\n1-BCA-I\t\t2-BCA-II\t3-BCA-III");
+else
+printf("\n1-BBM-I\t\t2-BBM-II\t3-BBM-III\n");
+printf("\nPLEASE ENTER CORRECT OPTION:");
+scanf("%d",&opt);
 }
-}
-if(p==0)
-{
-printf("\nPLEASE CHOOSE FROM GIVEN OPTION");
-goto h;
-}
+if(strcmpi(lib_file,"bca_lib.txt")==0)
+strcpy(s1.cl,bca_cl[opt-1]);
+else
+strcpy(s1.cl,bbm_cl[opt-1]);
 printf("\nENTER YOUR ROLL=");
 scanf("%d",&s1.r);
 strcpy(s1.dep,dep);
@@ -434,12 +272,12 @@ fwrite(&s,sizeof(s),1,fp);
 fclose(fp1);
 fclose(fp);
 }
-void ret_book()
+void ret_book(char lib_file[],char stud_file[])
 {
 char bk[30],bk1[30];
 int p=0,roll,i=0,j;
-fp=fopen("bca_lib.txt","rb+");
-fp1=fopen("bca_stdu.txt","rb");
+fp=fopen(lib_file,"rb+");
+fp1=fopen(stud_file,"rb");
 printf("\nENTER STUDENT ROLL NO FOR RETURN BOOK=");
 scanf("%d",&roll);
 printf("\nENTER BOOK NAME FOR RETURNING=");
@@ -458,8 +296,8 @@ i++;
 }
 fclose(fp1);
 fclose(ftemp);
-remove("bca_stdu.txt");
-rename("temp2.txt","bca_stdu.txt");
+remove(stud_file);
+rename("temp2.txt",stud_file);
 if(p==0)
 printf("\nSTUDENT RECORD NOT FOUND");
 else
@@ -476,10 +314,10 @@ fwrite(&s,sizeof(s),1,fp);
 }
 fclose(fp);
 }
-void search_st()
+void search_stud(char stud_file[])
 {
 int p=0,m=0,r;
-fp=fopen("bca_stdu.txt","rb");
+fp=fopen(stud_file,"rb");
 printf("\nENTER STUDENT ROLL FOR SEARCHING=");
 scanf("%d",&r);
 while(fread(&s1,sizeof(s1),1,fp)==1)
@@ -511,9 +349,9 @@ printf("\n\nRECORD SEARCHED SUCCESSFULLY");
 }
 fclose(fp);
 }
-void dis_st()
+void dis_stud(char stud_file[])
 {
-fp1=fopen("bca_stdu.txt","rb");
+fp1=fopen(stud_file,"rb");
 printf(" ________________________________________________________________________");
 printf("\n|    NAME\tCLASS\tROLL\tDEPARTMENT  BOOK NAME   ISSUE DATE       |");
 printf("\n|________________________________________________________________________|");
@@ -529,39 +367,40 @@ printf("\n|    %s\t%s\t%d\t%s\t     %s   \t%d/%d/%d       |",s1.na,s1.cl,s1.r,s1
 printf("\n|________________________________________________________________________|");
 fclose(fp1);
 }
-void upd_st()
+void upd_stud(char lib_file[],char stud_file[])
 {
-int f=0,r,i,op,p=0;
-char cl[4][40]={"BCA-I","BCA-II","BCA-III","BCA-IV"};
+int f=0,r,i,opt;
+char bca_cl[4][40]={"BCA-I","BCA-II","BCA-III"};
+char bbm_cl[4][40]={"BBM-I","BBM-II","BBM-III"};
 printf("\nENTER STUDENT ROLL NO FOR UPDATE=");
 scanf("%d",&r);
-fp=fopen("bca_stdu.txt","rb+");
+fp=fopen(stud_file,"rb+");
 while(fread(&s1,sizeof(s1),1,fp)==1)
 {
 if(r==s1.r)
 {
 printf("\nENTER YOUR NAME=");
 scanf("%s",s1.na);
-h:
-printf("\nCHOOSE YOUR CLASS\n");
-printf("\n1-BCA-I\t\t2-BCA-II\t3-BCA-III\t4-BCA-IV\n");
-printf("\nENTER OPTION(1-4)=");
-scanf("%d",&op);
-op=op-1;
-for(i=0;i<sizeof(cl);i++)
+printf("CHOOSE CLASS:");
+if(strcmpi(lib_file,"bca_lib.txt")==0)
+printf("\n1-BCA-I\t\t2-BCA-II\t3-BCA-III\n");
+else
+printf("\n1-BBM-I\t\t2-BBM-II\t3-BBM-III");
+printf("\nENTER OPTION(1-3)=");
+scanf("%d",&opt);
+while(!(opt>0&&opt<4))
 {
-if(op==0||op==1||op==2||op==3)
-{
-strcpy(s1.cl,cl[op]);
-p=1;
-break;
+if(strcmpi(lib_file,"bca_lib.txt")==0)
+printf("\n1-BCA-I\t\t2-BCA-II\t3-BCA-III");
+else
+printf("\n1-BBM-I\t\t2-BBM-II\t3-BBM-III\n");
+printf("\nPLEASE ENTER CORRECT OPTION:");
+scanf("%d",&opt);
 }
-}
-if(p==0)
-{
-printf("\nPLEASE CHOOSE FROM GIVEN OPTION");
-goto h;
-}
+if(strcmpi(lib_file,"bca_lib.txt")==0)
+strcpy(s1.cl,bca_cl[opt-1]);
+else
+strcpy(s1.cl,bbm_cl[opt-1]);
 printf("\nENTER YOUR ROLL=");
 scanf("%d",&s1.r);
 fseek(fp,-si1,1);
@@ -576,246 +415,11 @@ else
 printf("\nSTUDENT RECORD UPDATED SUCCESSFULLY");
 fclose(fp);
 }
-void sort_st()
+void sort_stud(char stud_file[])
 {
 struct issue temp,st1[50];
 int i,j,n=0;
-fp=fopen("bca_stdu.txt","rb");
-printf(" ________________________________________________________________________");
-printf("\n|    NAME\tCLASS\tROLL\tDEPARTMENT  BOOK NAME   ISSUE DATE       |");
-printf("\n|________________________________________________________________________|");
-while(fread(&s1,sizeof(s1),1,fp)==1)
-st1[n++]=s1;
-for(i=0;i<n-1;i++)
-{
-for(j=i+1;j<n;j++)
-{
-if(strcmpi(st1[i].na,st1[j].na)>0)
-{
-temp=st1[i];
-st1[i]=st1[j];
-st1[j]=temp;
-}
-}
-}
-for(i=0;i<n;i++)
-{
-if((st1[i].da>=1&&st1[i].da<=9)&&(st1[i].mo>=1&&st1[i].mo<=9))
-printf("\n|    %s\t%s\t%d\t%s\t     %s   \t%d/%d/%d         |",st1[i].na,st1[i].cl,st1[i].r,st1[i].dep,st1[i].bk,st1[i].da,st1[i].mo,st1[i].ye);
-if((st1[i].da>=1&&st1[i].da<=9)&&(st1[i].mo>9)||(st1[i].mo>=1&&st1[i].mo<=9)&&(st1[i].da>9))
-printf("\n|    %s\t%s\t%d\t%s\t     %s   \t%d/%d/%d        |",st1[i].na,st1[i].cl,st1[i].r,st1[i].dep,st1[i].bk,st1[i].da,st1[i].mo,st1[i].ye);
-if(st1[i].da>9&&st1[i].mo>9)
-printf("\n|    %s\t%s\t%d\t%s\t     %s   \t%d/%d/%d       |",st1[i].na,st1[i].cl,st1[i].r,st1[i].dep,st1[i].bk,st1[i].da,st1[i].mo,st1[i].ye);
-}
-printf("\n|________________________________________________________________________|");
-fclose(fp);
-}
-void issue_book1()
-{
-char bk[30],dep[5]={"BBM"},cl[10][40]={"BBM-I","BBM-II","BBM-III","BBM-IV"};
-int p=0,op,i;
-fp=fopen("bbm_lib.txt","rb+");
-fp1=fopen("bbm_stdu.txt","ab");
-printf("\nENTER BOOK NAME=");
-scanf("%s",bk);
-while(fread(&s,sizeof(s),1,fp)==1)
-{
-if(strcmpi(bk,s.book)==0&&s.stock>0)
-{
-p=1;
-break;
-}
-}
-if(p==0)
-printf("\nTHIS BOOK IS CURRENTLY UNAVAILABLE");
-else
-{
-p=0;
-printf("\nENTER YOUR NAME=");
-scanf("%s",s1.na);
-h:
-printf("\nCHOOSE YOUR CLASS\n");
-printf("\n1-BBM-I\t\t2-BBM-II\t3-BBM-III\t4-BBM-IV\n");
-printf("\nENTER OPTION(1-4)=");
-scanf("%d",&op);
-op=op-1;
-for(i=0;i<sizeof(cl);i++)
-{
-if(op==0||op==1||op==2||op==3)
-{
-strcpy(s1.cl,cl[op]);
-p=1;
-break;
-}
-}
-if(p==0)
-{
-printf("\nPLEASE CHOOSE FROM GIVEN OPTION");
-goto h;
-}
-printf("\nENTER YOUR ROLL=");
-scanf("%d",&s1.r);
-strcpy(s1.dep,dep);
-strcpy(s1.bk,bk);
-getdate(&dt);
-s1.da=dt.da_day;
-s1.mo=dt.da_mon;
-s1.ye=dt.da_year;
-s.stock--;
-fseek(fp,-si,1);
-fwrite(&s1,sizeof(s1),1,fp1);
-fwrite(&s,sizeof(s),1,fp);
-}
-fclose(fp1);
-fclose(fp);
-}
-void ret_book1()
-{
-char bk[30],bk1[30];
-int p=0,roll,i=0,j;
-fp=fopen("bbm_lib.txt","rb+");
-fp1=fopen("bbm_stdu.txt","rb");
-printf("\nENTER STUDENT ROLL NO FOR RETURN BOOK=");
-scanf("%d",&roll);
-printf("\nENTER BOOK NAME FOR DELETING=");
-scanf("%s",bk1);
-ftemp=fopen("temp2.txt","wb");
-while(fread(&s1,sizeof(s1),1,fp1)==1)
-{
-if(s1.r!=roll||strcmpi(s1.bk,bk1)!=0)
-fwrite(&s1,sizeof(s1),1,ftemp);
-else
-{
-p=1;
-strcpy(bk,s1.bk);
-i++;
-}
-}
-fclose(fp1);
-fclose(ftemp);
-remove("bbm_stdu.txt");
-rename("temp2.txt","bbm_stdu.txt");
-if(p==0)
-printf("\nSTUDENT RECORD NOT FOUND");
-else
-printf("\nBOOK RETURNED SUCCESSFULLY");
-while(fread(&s,sizeof(s),1,fp)==1)
-{
-if(strcmpi(bk,s.book)==0)
-{
-for(j=1;j<=i;j++)
-s.stock++;
-fseek(fp,-si,1);
-fwrite(&s,sizeof(s),1,fp);
-}
-}
-fclose(fp);
-}
-void search_st1()
-{
-int p=0,m=0,r;
-fp=fopen("bbm_stdu.txt","rb");
-printf("\nENTER STUDENT ROLL FOR SEARCHING");
-scanf("%d",&r);
-while(fread(&s1,sizeof(s1),1,fp)==1)
-{
-if(s1.r==r)
-{
-if(m==0)
-{
-printf(" ________________________________________________________________________");
-printf("\n|    NAME\tCLASS\tROLL\tDEPARTMENT  BOOK NAME   ISSUE DATE       |");
-printf("\n|________________________________________________________________________|");
-m++;
-}
-if((s1.da>=1&&s1.da<=9)&&(s1.mo>=1&&s1.mo<=9))
-printf("\n|    %s\t%s\t%d\t%s\t     %s   \t%d/%d/%d         |",s1.na,s1.cl,s1.r,s1.dep,s1.bk,s1.da,s1.mo,s1.ye);
-if((s1.da>=1&&s1.da<=9)&&(s1.mo>9)||(s1.mo>=1&&s1.mo<=9)&&(s1.da>9))
-printf("\n|    %s\t%s\t%d\t%s\t     %s   \t%d/%d/%d        |",s1.na,s1.cl,s1.r,s1.dep,s1.bk,s1.da,s1.mo,s1.ye);
-if(s1.da>9&&s1.mo>9)
-printf("\n|    %s\t%s\t%d\t%s\t     %s   \t%d/%d/%d       |",s1.na,s1.cl,s1.r,s1.dep,s1.bk,s1.da,s1.mo,s1.ye);
-p=1;
-}
-}
-if(p==0)
-printf("\nSTUDENT NOT FOUND");
-else
-{
-printf("\n|________________________________________________________________________|");
-printf("\n\nRECORD SEARCHED SUCCESSFULLY");
-}
-fclose(fp);
-}
-void dis_st1()
-{
-fp1=fopen("bbm_stdu.txt","rb");
-printf(" ________________________________________________________________________");
-printf("\n|    NAME\tCLASS\tROLL\tDEPARTMENT  BOOK NAME   ISSUE DATE       |");
-printf("\n|________________________________________________________________________|");
-while(fread(&s1,sizeof(s1),1,fp1)==1)
-{
-if((s1.da>=1&&s1.da<=9)&&(s1.mo>=1&&s1.mo<=9))
-printf("\n|    %s\t%s\t%d\t%s\t     %s   \t%d/%d/%d         |",s1.na,s1.cl,s1.r,s1.dep,s1.bk,s1.da,s1.mo,s1.ye);
-if((s1.da>=1&&s1.da<=9)&&(s1.mo>9)||(s1.mo>=1&&s1.mo<=9)&&(s1.da>9))
-printf("\n|    %s\t%s\t%d\t%s\t     %s   \t%d/%d/%d        |",s1.na,s1.cl,s1.r,s1.dep,s1.bk,s1.da,s1.mo,s1.ye);
-if(s1.da>9&&s1.mo>9)
-printf("\n|    %s\t%s\t%d\t%s\t     %s   \t%d/%d/%d       |",s1.na,s1.cl,s1.r,s1.dep,s1.bk,s1.da,s1.mo,s1.ye);
-}
-printf("\n|________________________________________________________________________|");
-fclose(fp1);
-}
-void upd_st1()
-{
-int f=0,r,op,i,p=0;
-char cl[4][40]={"BBM-I","BBM-II","BBM-III","BBM-IV"};
-printf("\nENTER STUDENT ROLL NO FOR UPDATE=");
-scanf("%d",&r);
-fp=fopen("bbm_stdu.txt","rb+");
-while(fread(&s1,sizeof(s1),1,fp)==1)
-{
-if(r==s1.r)
-{
-printf("\nENTER YOUR NAME=");
-scanf("%s",s1.na);
-h:
-printf("\nCHOOSE YOUR CLASS\n");
-printf("\n1-BBM-I\t\t2-BBM-II\t3-BBM-III\t4-BBM-IV\n");
-printf("\nENTER OPTION(1-4)=");
-scanf("%d",&op);
-op=op-1;
-for(i=0;i<sizeof(cl);i++)
-{
-if(op==0||op==1||op==2||op==3)
-{
-strcpy(s1.cl,cl[op]);
-p=1;
-break;
-}
-}
-if(p==0)
-{
-printf("\nPLEASE CHOOSE FROM GIVEN OPTION");
-goto h;
-}
-printf("\nENTER YOUR ROLL=");
-scanf("%d",&s1.r);
-fseek(fp,-si1,1);
-fwrite(&s1,sizeof(s1),1,fp);
-f=1;
-break;
-}
-}
-if(f==0)
-printf("\nSTUDENT NOT FOUND");
-else
-printf("\nSTUDENT RECORD UPDATED SUCCESSFULLY");
-fclose(fp);
-}
-void sort_st1()
-{
-struct issue temp,st1[50];
-int i,j,n=0;
-fp=fopen("bbm_stdu.txt","rb");
+fp=fopen(stud_file,"rb");
 printf(" ________________________________________________________________________");
 printf("\n|    NAME\tCLASS\tROLL\tDEPARTMENT  BOOK NAME   ISSUE DATE       |");
 printf("\n|________________________________________________________________________|");
@@ -909,9 +513,9 @@ fclose(fp);
 void login()
 {
 int ch1;
-clrscr();
 int p1=0;
 char us1[30],ps1[30];
+clrscr();
 fp=fopen("password.txt","ab");
 fp1=fopen("password.txt","rb");
 if(fread(&p,sizeof(p),1,fp1)!=1)
@@ -954,7 +558,7 @@ if(p1==0)
 printf("\n\t\t\tACCESS DENIED!!!");
 else
 {
-lib1();
+lib_menu();
 }
 }
 fclose(fp1);
@@ -980,7 +584,7 @@ printf("\n\t|\t\t\t\t\t\t\t  < next >   |");
 printf("\n\t----------------------------------------------------------------------");
 getch();
 }
-void issue_dep()
+void stud_opt_ch()
 {
 printf("\n\t\t\t|  1-ISSUE BOOK               |");
 printf("\n\t\t\t|  2-RETURN BOOK              |");
@@ -993,7 +597,7 @@ printf("\n\t\t\t|  8-HOME                     |");
 printf("\n\t\t\t*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*");
 printf("\n\n\t\t\tENTER YOUR CHOICE=");
 }
-void bk_dep()
+void lib_opt_ch()
 {
 printf("\n\t\t\t|  1-INSERT BOOK IN LIBRARY       |");
 printf("\n\t\t\t|  2-DISPLAY BOOK IN LIBRARY      |");
@@ -1040,7 +644,7 @@ clrscr();
 switch(ch)
 {
 case 1:
-iss1();
+stud_menu();
 break;
 case 2:
 login();
@@ -1056,7 +660,7 @@ printf("\nINVALID CHOICE!!!");
 getch();
 }while(2>1);
 }
-void iss1()
+void stud_menu()
 {
 while(1)
 {
@@ -1066,10 +670,10 @@ scanf("%d",&ch1);
 switch(ch1)
 {
 case 1:
-iss2();
+bbm_stud();
 break;
 case 2:
-iss3();
+bca_stud();
 case 3:
 main();
 break;
@@ -1082,38 +686,40 @@ printf("\nINVALID CHOICE!!!");
 getch();
 }
 }
-void iss2()
+void bbm_stud()
 {
 int ch4;
 while(1)
 {
+char lib_file[20]="bca_lib.txt";
+char stud_file[20]="bca_stud.txt";
 clrscr();
 printf("\n\n\n\t\t\t*-*-*-*-*BCA DEPARTMENT-*-*-*-*");
-issue_dep();
+stud_opt_ch();
 scanf("%d",&ch4);
 clrscr();
 switch(ch4)
 {
 case 1:
-issue_book();
+issue_book(lib_file,stud_file);
 break;
 case 2:
-ret_book();
+ret_book(lib_file,stud_file);
 break;
 case 3:
-dis_st();
+dis_stud(stud_file);
 break;
 case 4:
-upd_st();
+upd_stud(lib_file,stud_file);
 break;
 case 5:
-search_st();
+search_stud(stud_file);
 break;
 case 6:
-sort_st();
+sort_stud(stud_file);
 break;
 case 7:
-iss1();
+stud_menu();
 break;
 case 8:
 main();
@@ -1124,80 +730,40 @@ printf("\nINVALID CHOICE!!!");
 getch();
 }
 }
-void lib2()
-{
-int ch3;
-while(1)
-{
-clrscr();
-printf("\n\n\n\t\t\t*-*-*-*-*-*BCA LIBRARY*-*-*-*-*-*-*");
-bk_dep();
-scanf("%d",&ch3);
-clrscr();
-switch(ch3)
-{
-case 1:
-in_book();
-break;
-case 2:
-dis_book();
-break;
-case 3:
-search_book();
-break;
-case 4:
-del_book();
-break;
-case 5:
-upd_book();
-break;
-case 6:
-sort_book();
-break;
-case 7:
-lib1();
-break;
-case 8:
-main();
-break;
-default:
-printf("\nINVALID CHOICE!!!");
-}
-getch();
-}
-}
-void iss3()
+void bca_stud()
 {
 int ch4;
+char lib_file[20]="bbm_lib.txt";
+char stud_file[20]="bbm_stud.txt";
 while(1)
 {
 clrscr();
 printf("\n\n\n\t\t\t*-*-*-*-BBM DEPARTMENT*-*-*-*-");
-issue_dep();
+stud_opt_ch();
 scanf("%d",&ch4);
 clrscr();
 switch(ch4)
 {
 case 1:
-issue_book1();
+issue_book(lib_file,stud_file);
 break;
 case 2:
-ret_book1();
+ret_book(lib_file,stud_file);
 break;
 case 3:
-dis_st1();
+dis_stud(stud_file);
 break;
 case 4:
-upd_st1();
+upd_stud(lib_file,stud_file);
 break;
 case 5:
-search_st1();
+search_stud(stud_file);
 break;
 case 6:
-sort_st1();
+sort_stud(stud_file);
 break;
 case 7:
-iss1();
+stud_menu();
 break;
 case 8:
 main();
@@ -1208,38 +774,82 @@ printf("\nINVALID CHOICE!!!");
 getch();
 }
 }
-void lib3()
+void bca_lib()
 {
 int ch3;
+char lib_file[20]="bca_lib.txt";
 while(1)
 {
 clrscr();
-printf("\n\n\n\t\t\t*-*-*-*-*-*BBM LIBRARY*-*-*-*-*-*-*");
-bk_dep();
+printf("\n\n\n\t\t\t*-*-*-*-*-*BCA LIBRARY*-*-*-*-*-*-*");
+lib_opt_ch();
 scanf("%d",&ch3);
 clrscr();
 switch(ch3)
 {
 case 1:
-in_book1();
+in_book(lib_file);
 break;
 case 2:
-dis_book1();
+dis_book(lib_file);
 break;
 case 3:
-search_book1();
+search_book(lib_file);
 break;
 case 4:
-del_book1();
+del_book(lib_file);
 break;
 case 5:
-upd_book1();
+upd_book(lib_file);
 break;
 case 6:
-sort_book1();
+sort_book(lib_file);
 break;
 case 7:
-lib1();
+lib_menu();
+break;
+case 8:
+main();
+break;
+default:
+printf("\nINVALID CHOICE!!!");
+}
+getch();
+}
+}
+void bbm_lib()
+{
+int ch3;
+while(1)
+{
+char lib_file[20]="bbm_lib.txt";
+clrscr();
+printf("\n\n\n\t\t\t*-*-*-*-*-*BBM LIBRARY*-*-*-*-*-*-*");
+lib_opt_ch();
+scanf("%d",&ch3);
+clrscr();
+switch(ch3)
+{
+case 1:
+in_book(lib_file);
+break;
+case 2:
+dis_book(lib_file);
+break;
+case 3:
+search_book(lib_file);
+break;
+case 4:
+del_book(lib_file);
+break;
+case 5:
+upd_book(lib_file);
+break;
+case 6:
+sort_book(lib_file);
+break;
+case 7:
+lib_menu();
 break;
 case 8:
 main();
@@ -1286,7 +896,7 @@ printf("\nINVALID CHOICE!!!");
 getch();
 }
 }
-void lib1()
+void lib_menu()
 {
 int ch1;
 while(1)
@@ -1296,10 +906,10 @@ scanf("%d",&ch1);
 switch(ch1)
 {
 case 1:
-lib2();
+bca_lib();
 break;
 case 2:
-lib3();
+bbm_lib();
 break;
 case 3:
 main();
